@@ -114,5 +114,24 @@ foreach (var hero in result.Data)
 }
 ```
 
+####  Multiples recordsets
+
+```csharp
+conexion.RecordsetsExecute(@"SELECT TOP 10 * FROM Heroes; 
+SELECT TOP 5 * FROM Villains");
+
+var heroes = conexion.RecordsetsResults<Hero>();
+var villains = conexion.RecordsetsResults<Villain>();
+
+foreach (var hero in heroes.Data)
+{
+	Console.WriteLine(hero.Name);
+}
+
+foreach (var villain in villains.Data)
+{
+	Console.WriteLine(villain.Name);
+}
+```
 
 **Try it, enjoy it and have fun :smile:**
