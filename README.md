@@ -35,7 +35,7 @@ foreach (var hero in result.Data)
 ```
 This returns an object of type **Result** where the resultset is stored in the **Data** property of the object.
 
-</br>
+
 ####  Parameters
 
 ```csharp
@@ -50,7 +50,7 @@ foreach (var hero in result.Data)
 }
 ```
 
-</br>
+
 ####  DataSet & DataTable
 ```csharp
 ConexionParameters parameters = new ConexionParameters();
@@ -61,7 +61,7 @@ var result = conexion.ExecuteWithResults<Hero>("GetHeroById", parameters, out Da
 var result2 = conexion.ExecuteWithResults<Hero>("GetHeroById", parameters, out DataTable dt);
 ```
 
-</br>
+
 ####  Read by row
 ```csharp
 ConexionParameters parameters = new ConexionParameters();
@@ -77,7 +77,7 @@ conexion.ExecuteWithResults("GetHeroesByName",
                 });
 ```
 
-</br>
+
 ####  Mapping column name
 
 ```sql
@@ -114,5 +114,5 @@ foreach (var hero in result.Data)
 }
 ```
 
-</br>
+
 **Try it, enjoy it and have fun :smile:**
