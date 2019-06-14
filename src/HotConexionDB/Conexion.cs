@@ -376,6 +376,96 @@ namespace HotConexionDB
             return ResultBuilder(parameters);
         }
 
+        public Result<T> ExecuteScalar<T>(string query)
+        {
+            return ExecuteScalar<T>(query, null);
+        }
+
+        public Result<T> ExecuteScalar<T>(string storeProcedure, ConexionParameters parameters)
+        {
+            object scalar;
+            try
+            {
+                if (_transaction == null && this._conexion.State != ConnectionState.Open)
+                    this._conexion.Open();
+
+                using (var cmd = this._conexion.CreateCommand())
+                {
+                    cmd.CommandText = storeProcedure;
+                    cmd.Transaction = _transaction;
+                    cmd.CommandTimeout = ConexionTimeOut;
+
+                    if (parameters != null)
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        foreach (var p in parameters.Parameters)
+                        {
+                            var pt = cmd.CreateParameter();
+                            pt.ParameterName = p.Name;
+                            pt.DbType = p.Type;
+                            pt.Value = p.Value;
+                            pt.Size = p.Size;
+                            pt.Direction = p.Direction;
+
+                            cmd.Parameters.Add(pt);
+                        }
+                    }
+
+                    scalar = cmd.ExecuteScalar();                                        
+
+                    if (parameters != null)
+                    {
+                        foreach (IDbDataParameter p in cmd.Parameters)
+                        {
+                            var param = parameters.Parameters.FirstOrDefault(x => x.Name == p.ParameterName);
+                            if (param != null)
+                            {
+                                param.Value = p.Value;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ThrowExceptionExecuteMessage + ex.Message, ex);
+            }
+            finally
+            {
+                if (_transaction == null && _closeConnection)
+                    this._conexion.Close();
+            }
+
+            var result = ResultBuilder<T>(parameters);
+
+            try
+            {
+                var type = typeof(Result<T>);
+
+                foreach (PropertyInfo pro in type.GetProperties())
+                {
+                    string propertyName = pro.Name.ToLowerInvariant();
+
+                    if (propertyName == "data")
+                    {
+                        pro.SetValue(result, scalar, null);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            
+
+            return result;
+        }
+
         public Castable ExecuteScalar(string query)
         {
             return ExecuteScalar(query, null);
