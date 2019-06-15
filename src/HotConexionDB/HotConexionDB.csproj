@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Result.cs" />
+    <Compile Include="Classes\ResultList.cs" />
     <Compile Include="Conexion.cs" />
     <Compile Include="ConexionColumnAttribute.cs" />
     <Compile Include="ConexionDbType.cs" />
