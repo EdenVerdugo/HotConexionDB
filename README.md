@@ -54,7 +54,7 @@ foreach (var hero in result.Data)
 ####  DataSet & DataTable
 ```csharp
 ConexionParameters parameters = new ConexionParameters();
-parameters.Add("@HeroId", ConexionDbType.Int, 1);
+parameters.Add("@HeroId", ConexionDbType.Int, 1); 
 
 var result = conexion.ExecuteWithResults<Hero>("GetHeroById", parameters, out DataSet ds);
 
