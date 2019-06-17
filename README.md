@@ -21,12 +21,12 @@ public class Hero
 	public int HeroId { get; set; }
 	public string HeroName { get; set; }
 	public string AlterEgo { get; set; }
-	public int Universe { get; set; }
+	public int UniverseId { get; set; }
 }
 
 Conexion conexion = new Conexion(ConexionType.MSSQLServer, "server", "database", "username", "password");
 
-var result = conexion.ExecuteWithResults<Hero>("select top 5 * from SuperHeroes");
+var result = conexion.ExecuteWithResults<Hero>("SELECT TOP 5 * FROM Heroes");
 
 foreach (var hero in result.Data)
 {
@@ -68,13 +68,13 @@ ConexionParameters parameters = new ConexionParameters();
 parameters.Add("@Name", ConexionDbType.VarChar, "bat");
 
 conexion.ExecuteWithResults("GetHeroesByName",
-				parameters,
-                row =>
-                {
-                    Console.WriteLine("{0} \t {1}", 
-						row["HeroId"].ToInt32(), 
-						row["HeroName"].ToString());                      
-                });
+			    parameters,
+			    row =>
+			    {
+			        Console.WriteLine("{0} \t {1}", 
+				row["HeroId"].ToInt32(), 
+				row["HeroName"].ToString());                      
+			    });
 ```
 
 
@@ -92,7 +92,7 @@ If you want mapping a column name in the object class you can use the attributte
 ```csharp
 public class Hero
 {
-    [ConexionColumn("HeroId")]
+	[ConexionColumn("HeroId")]
 	public int Id { get; set; }
 	
 	[ConexionColumn("HeroName")]
@@ -100,7 +100,7 @@ public class Hero
 	
 	public string AlterEgo { get; set; }
 	
-	public int Universe { get; set; }
+	public int UniverseId { get; set; }
 }
 
 ConexionParameters parameters = new ConexionParameters();
